@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<context:property-placeholder location="classpath:config/project.properties"/>
+    
+	<!-- 注册HandlerMapper、HandlerAdapter两个映射类 -->
+	<mvc:annotation-driven />
+	<!-- 访问静态资源 -->
+	<mvc:default-servlet-handler />
+	
+	<!-- 国际化配置 -->
+	<bean id="localeResolver"
+		class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+		<property name="cookieName" value="_clientlocale"/>
+		<property name="defaultLocale" value="zh_CN"/>
+		<property name="cookieMaxAge" value="2147483647"/>
+	</bean>
+    
+	<!-- 多视图解析，根据URL的后缀渲染不同的格式  -->
+	<bean id="contentNegotiationManager"
+		class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+		<property name="favorPathExtension" value="false"/>
+		<property name="favorParameter" value="true"/>
+		<property name="mediaTypes">
+			<value>
+                json=application/json
+                xml=application/xml
+			</value>
+		</property>
+	</bean>
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="contentNegotiationManager" ref="contentNegotiationManager"/>
+	</bean>
+    
+    <!-- 实现json的自动转换化,响应媒体类型为application/json,application/x-www-form-urlencoded -->
+	<bean id="jackson2HttpMessageConverter"
+		class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>application/json;charset=utf-8</value>
+				<value>application/x-www-form-urlencoded;charset=utf-8</value>
+			</list>
+		</property>
+	</bean>
+	<!-- 自动转换化为字符串,响应媒体类型为text/plain,text/html -->
+	<bean id="stringHttpMessageConverter" class="org.springframework.http.converter.StringHttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>text/plain;charset=utf-8</value>
+				<value>text/html;charset=utf-8</value>
+			</list>
+		</property>
+	</bean>
+	<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<ref bean="jackson2HttpMessageConverter"/>
+				<ref bean="stringHttpMessageConverter"/>
+			</list>
+		</property>
+	</bean>
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<ref bean="jackson2HttpMessageConverter"/>
+			<ref bean="stringHttpMessageConverter"/>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+
+	<!-- 自定义异常页面 
+	<bean class="com.banksteel.erp.common.exception.CustomHandlerExceptionResolver">
+		<property name="exceptionMappings">
+			<props>
+				<prop key="java.lang.Exception">error/500</prop>
+			</props>
+		</property>
+	</bean>
+	-->
+	<!-- velocity基本配置 -->
+	<bean id="velocityConfig" class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<property name="resourceLoaderPath"  value="WEB-INF/view/" /><!-- 設置模板防止位置-->    
+	    <property name="velocityProperties">    
+	        <props>    
+	            <prop key="directive.foreach.counter.name">loopCounter</prop>    
+	            <prop key="directive.foreach.counter.initial.value">0</prop>    
+	            <prop key="input.encoding">UTF-8</prop><!-- 指定模板引擎进行模板处理的编码 -->    
+	            <prop key="output.encoding">UTF-8</prop><!-- 指定输出流的编码 -->    
+	        </props>    
+	    </property>    
+	</bean>
+	<!-- velocity显示视图的配置 -->  
+	<bean id="velocityViewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		<property name="cache" value="false"/>
+		<property name="suffix" value=".vm"/><!-- 视图文件的后缀名 -->
+		<property name="toolboxConfigLocation" value="WEB-INF/config/velocity-toolbox.xml"/>
+		<property name="contentType" value="text/html;charset=UTF-8"/>
+		<property name="exposeSpringMacroHelpers" value="true"/><!--是否使用spring对宏定义的支持--> 
+		<property name="exposeSessionAttributes" value="true" />
+		<property name="exposeRequestAttributes" value="true"/><!--是否开放request属性-->
+		<property name="exposePathVariables" value="true"/>
+		<property name="dateToolAttribute" value="dateTool"/><!--日期函数名称--> 
+		<property name="numberToolAttribute" value="numberTool"/><!--数字函数名称-->
+		<property name="requestContextAttribute" value="req"/><!--request属性引用名称-->
+	</bean>
+
+</beans>
