@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:dubbo="http://code.alibabatech.com/schema/dubbo" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	   default-autowire="byName" 
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	                http://www.springframework.org/schema/beans/spring-beans.xsd             
+	                http://code.alibabatech.com/schema/dubbo             
+	                http://code.mysteeltech.com/schema/dubbo/dubbo.xsd">
+	<dubbo:application name="jueyunqi-springmvc-web"/>
+	
+	<dubbo:registry address="${dubbo.registry.address}" id="dev" timeout="${dubbo.timeout}"/>	
+	<dubbo:reference check="false" id="employeeService" interface="com.jueyunqi.service.EmployeeService" registry="dev" retries="0"/>
+</beans>

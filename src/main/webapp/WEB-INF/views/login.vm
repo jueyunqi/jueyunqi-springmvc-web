@@ -2,16 +2,18 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>增加</title>
+<title>登录</title>
 </head>
 <body>
-    <h1>增加</h1>
+    <h1>登录</h1>
     <form>  
-		name:<input type="text" name="name" id="name">  
-		passw:<input type="text" name="passw" id="passw">  
-		<input type="button" id="add" name = "add" value="提交">  
+		name:<input type="text" name="name" id="name" />  </br>
+		passw:<input type="text" name="passwd" id="passwd" />  </br>
+		<input type="button" id="login" name = "login" value="登录" />&nbsp
+		<input type="button" id="register" name = "register" value="注册" /> 
 	</form>  
+	<input type = "hidden" id = "web_root" name = "web_root" value = "${rc.contextPath}"/>
 </body>
-<script type="text/javascript" src="/web001/js/jquery-3.1.1.min.js" ></script>
-<script type="text/javascript" src="/web001/js/addUser.js" ></script>
+<script type="text/javascript" src="${rc.contextPath}/js/jquery-3.1.1.min.js" ></script>
+<script type="text/javascript" src="${rc.contextPath}/js/login.js" ></script>
 </html>

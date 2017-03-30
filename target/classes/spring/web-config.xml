@@ -107,7 +107,7 @@
 		<property name="exposePathVariables" value="true"/>
 		<property name="dateToolAttribute" value="dateTool"/><!--日期函数名称--> 
 		<property name="numberToolAttribute" value="numberTool"/><!--数字函数名称-->
-		<property name="requestContextAttribute" value="req"/><!--request属性引用名称-->
+		<property name="requestContextAttribute" value="rc"/><!--request属性引用名称-->
 	</bean>
 
 </beans>
